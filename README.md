@@ -1,159 +1,236 @@
-# Mininet-WiFi Framework
+# Framework Mininet-WiFi para Simulação de Redes Mesh
 
-## 📡 Sobre o Projeto
+Framework completo para simulação de redes Wi-Fi mesh realistas usando Mininet-WiFi, com foco em mobilidade, interferência e análise de performance.
 
-Este projeto implementa uma rede Wi-Fi emulada usando Mininet-WiFi, que oferece:
+## 🚀 Funcionalidades
 
-- **Emulação realista de Wi-Fi** com stack real
-- **Mobilidade de dispositivos** (Raspberry Pi simulados)
-- **Interferência e perda de sinal** modeladas via wmediumd
-- **Mudança dinâmica de AP** baseada em RSSI
-- **Compatibilidade** com ferramentas padrão (iperf, ping, tcpdump)
-
-## 🛠️ Instalação
-
-### Pré-requisitos
-```bash
-# Atualizar sistema
-sudo apt update && sudo apt upgrade -y
-
-# Instalar dependências
-sudo apt install -y git python3-pip build-essential libnl-3-dev libnl-genl-3-dev pkg-config libssl-dev ethtool
-sudo apt install -y rfkill wireless-tools wpasupplicant hostapd
-```
-
-### Instalação do Mininet-WiFi
-```bash
-# Clonar Mininet-WiFi
-git clone https://github.com/intrig-unicamp/mininet-wifi.git
-cd mininet-wifi
-
-# Instalar
-sudo util/install.sh -Wlnfv
-
-# Verificar instalação
-sudo mn --wifi --test pingall
-```
-
-### Instalação do wmediumd (para interferência)
-```bash
-# Instalar wmediumd
-sudo apt install -y wmediumd
-
-# Ou compilar da fonte
-git clone https://github.com/bcopeland/wmediumd.git
-cd wmediumd
-make
-sudo make install
-```
-
-## 🚀 Uso Rápido
-
-### Executar cenário básico
-```bash
-sudo python3 scenarios/basic_wifi_mobility.py
-```
-
-### Executar com mobilidade
-```bash
-sudo python3 scenarios/wifi_mesh_mobility.py
-```
-
-### Executar com interferência
-```bash
-sudo python3 scenarios/wifi_interference.py
-```
+- **Cenários Realistas**: Simulações de redes mesh Wi-Fi com mobilidade
+- **Logs Estruturados**: Dados CSV com RSSI, distância, latência e conectividade
+- **Análise Avançada**: Ferramenta de análise com gráficos e estatísticas
+- **Testes de Performance**: Throughput e conectividade automatizados
+- **Mobilidade Dinâmica**: Movimento realista de dispositivos
 
 ## 📁 Estrutura do Projeto
 
 ```
 framework-mininet/
-├── scenarios/           # Cenários de teste
-├── scripts/            # Scripts auxiliares
-├── configs/            # Configurações
-├── tools/              # Ferramentas de análise
-└── docs/               # Documentação
+├── scenarios/                 # Cenários de simulação
+│   ├── basic_wifi.py         # Cenário básico Wi-Fi
+│   ├── mesh_mobility.py      # Rede mesh com mobilidade
+│   ├── interference_test.py  # Teste de interferência
+│   ├── sdn_wifi_test.py      # Validação SDN
+│   ├── rasp_car_scan.py      # 🎯 Rasp-Car Scanner
+│   └── rasp_car_rout_scan.py # 🎯 Rasp-Car-Rout (móvel)
+├── tools/                    # Ferramentas auxiliares
+│   ├── install_mininet.py    # Instalação automatizada
+│   ├── throughput_test.py    # Teste de throughput
+│   └── analyze_logs.py       # 📊 Análise de logs CSV
+├── logs/                     # Logs gerados
+├── requirements.txt          # Dependências Python
+└── README.md                # Este arquivo
 ```
 
-## 🔧 Cenários Disponíveis
+## 🎯 Cenários Principais
 
-1. **basic_wifi_mobility.py** - Rede Wi-Fi básica com mobilidade
-2. **wifi_mesh_mobility.py** - Rede mesh com dispositivos móveis
-3. **wifi_interference.py** - Teste de interferência e RSSI
-4. **sdn_wifi_test.py** - Validação de soluções SDN
+### 1. Rasp-Car Scanner
+- **Modem principal**: AP fixo (recebe internet)
+- **2 roteadores mesh**: Fixos, formam rede mesh
+- **Raspberry Pi**: Móvel, escaneia sinais Wi-Fi
+- **Logs**: CSV com RSSI, distância, latência, conectividade
 
-## 📊 Monitoramento
+### 2. Rasp-Car-Rout
+- **Modem principal**: AP fixo
+- **1 roteador mesh fixo**: mesh1
+- **1 roteador mesh móvel**: mesh2 (move junto com Raspberry)
+- **Raspberry Pi**: Móvel, sincronizado com mesh2
 
-### Verificar status da rede
+## 🛠️ Instalação
+
+### Pré-requisitos
 ```bash
-# Listar nós
-sudo mn --wifi --list
+# Ubuntu/Debian
+sudo apt update
+sudo apt install -y python3 python3-pip git
 
-# Verificar conectividade
-sudo mn --wifi --test pingall
-
-# Monitorar tráfego
-sudo tcpdump -i any -w capture.pcap
+# Dependências Python
+pip3 install -r requirements.txt
 ```
 
-### Análise de performance
+### Instalação do Mininet-WiFi
 ```bash
-# Teste de throughput
-sudo python3 tools/iperf_test.py
+# Instalação automatizada
+python3 tools/install_mininet.py
 
-# Análise de RSSI
-sudo python3 tools/rssi_monitor.py
+# Ou instalação manual
+git clone https://github.com/intrig-unicamp/mininet-wifi.git
+cd mininet-wifi
+sudo util/install.sh -Wlnfv
 ```
 
-## 🎯 Casos de Uso
+## 🚀 Como Usar
 
-### Validação de Redes Wi-Fi Mesh
-- Teste de roteamento dinâmico
-- Avaliação de throughput em diferentes topologias
-- Análise de latência em redes mesh
-
-### Testes com Mobilidade Controlada
-- Simulação de dispositivos móveis
-- Mudança automática de AP baseada em RSSI
-- Análise de handoff performance
-
-### Avaliação de Soluções SDN
-- Controle centralizado de rede Wi-Fi
-- Políticas de QoS dinâmicas
-- Otimização de recursos de rede
-
-## 🔍 Troubleshooting
-
-### Problemas Comuns
-1. **Erro de permissão**: Execute com `sudo`
-2. **Interface não encontrada**: Verifique se `wmediumd` está rodando
-3. **Dispositivo não conecta**: Verifique configurações de RSSI
-
-### Logs e Debug
+### 1. Executar Cenários
 ```bash
-# Ver logs do Mininet-WiFi
-sudo mn --wifi --log-level debug
+# Configurar PYTHONPATH
+export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.*/dist-packages
 
-# Verificar status do wmediumd
-sudo systemctl status wmediumd
+# Rasp-Car Scanner
+python3 scenarios/rasp_car_scan.py
+
+# Rasp-Car-Rout (móvel)
+python3 scenarios/rasp_car_rout_scan.py
 ```
 
-## 📚 Referências
+### 2. Analisar Logs
+```bash
+# Análise completa com gráficos
+python3 tools/analyze_logs.py rasp_car_log.csv
 
-- [Mininet-WiFi Documentation](https://github.com/intrig-unicamp/mininet-wifi)
-- [wmediumd Documentation](https://github.com/bcopeland/wmediumd)
-- [OpenFlow Protocol](https://opennetworking.org/software-defined-standards/specifications/)
+# Análise sem gráficos
+python3 tools/analyze_logs.py rasp_car_rout_log.csv --no-plots
+```
+
+### 3. Teste de Throughput
+```bash
+# Teste manual
+python3 tools/throughput_test.py
+
+# Ou usar iperf diretamente
+iperf -s  # Servidor
+iperf -c <IP>  # Cliente
+```
+
+## 📊 Logs e Análise
+
+### Estrutura dos Logs CSV
+```csv
+timestamp,position,ap,rssi,distance,latency,connected
+1703123456.789,15.0,25.0,0.0,modem,-45.23,5.5,15.5,YES
+1703123458.789,35.0,30.0,0.0,mesh1,-52.67,25.3,7.53,YES
+```
+
+### Métricas Coletadas
+- **RSSI**: Intensidade do sinal (dBm)
+- **Distância**: Distância até o AP (metros)
+- **Latência**: Latência simulada (ms)
+- **Conectividade**: Status de conexão (YES/NO)
+- **Posição**: Coordenadas X,Y,Z do dispositivo
+
+### Análise Automática
+A ferramenta `analyze_logs.py` gera:
+- 📈 Gráfico de RSSI ao longo do tempo
+- 📊 Performance por Access Point
+- 🗺️ Caminho de mobilidade
+- 📋 Estatísticas detalhadas
+
+## 🔧 Configurações Avançadas
+
+### Ajustar Range dos APs
+```python
+# Nos cenários, alterar o parâmetro 'range'
+modem = net.addAccessPoint('modem', ..., range=58)  # 58 metros
+```
+
+### Modificar Modelo de Propagação
+```python
+# Modelo log-distance com expoente personalizado
+net.setPropagationModel(model="logDistance", exp=3.5)
+```
+
+### Configurar Canais Wi-Fi
+```python
+# Canais não sobrepostos para evitar interferência
+modem = net.addAccessPoint('modem', ..., channel='1')   # 2.412 GHz
+mesh1 = net.addAccessPoint('mesh1', ..., channel='6')   # 2.437 GHz
+mesh2 = net.addAccessPoint('mesh2', ..., channel='11')  # 2.462 GHz
+```
+
+## 📈 Melhorias Implementadas
+
+### ✅ Concluídas
+- [x] Range dos APs ajustado para 58m
+- [x] Cálculo de RSSI realista baseado em modelo de propagação
+- [x] Métricas adicionais: distância, latência, conectividade
+- [x] Configuração de conectividade entre dispositivos
+- [x] Teste de throughput automatizado
+- [x] Ferramenta de análise de logs com gráficos
+- [x] Logs estruturados em CSV
+
+### 🔄 Próximas Melhorias
+- [ ] Simulação de obstáculos e paredes
+- [ ] Modelo de interferência mais realista
+- [ ] Handoff automático entre APs
+- [ ] Interface web para visualização
+- [ ] Mais cenários de teste
+
+## 🐛 Solução de Problemas
+
+### Erro: "No module named 'mininet.wifi'"
+```bash
+# Usar 'mn_wifi' em vez de 'mininet.wifi'
+from mn_wifi.node import OVSKernelAP
+from mn_wifi.link import wmediumd
+from mn_wifi.cli import CLI
+from mn_wifi.net import Mininet_wifi
+```
+
+### Erro: "enable_interference not supported"
+```bash
+# Remover parâmetro enable_interference
+net = Mininet_wifi(controller=Controller, link=wmediumd, accessPoint=OVSKernelAP)
+```
+
+### Erro: "iperf not found"
+```bash
+# Instalar iperf
+sudo apt install iperf
+```
+
+## 📝 Exemplos de Uso
+
+### Cenário Básico
+```bash
+# Executar cenário básico
+python3 scenarios/basic_wifi.py
+```
+
+### Teste de Interferência
+```bash
+# Executar teste de interferência
+python3 scenarios/interference_test.py
+```
+
+### Análise Comparativa
+```bash
+# Comparar performance dos dois cenários
+python3 tools/analyze_logs.py rasp_car_log.csv
+python3 tools/analyze_logs.py rasp_car_rout_log.csv
+```
 
 ## 🤝 Contribuição
 
-Para contribuir com o projeto:
-1. Fork o repositório
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Abra um Pull Request
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
 ## 📄 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes. 
+Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 
-sudo bash scripts/install_mininet_wifi.sh 
+## 👨‍💻 Autor
+
+**Eduardo Wanderley**
+- GitHub: [@eduardowanderleyde](https://github.com/eduardowanderleyde)
+
+## 🙏 Agradecimentos
+
+- Mininet-WiFi Team
+- Comunidade OpenFlow/SDN
+- Contribuidores do projeto
+
+---
+
+**Última atualização**: Dezembro 2024
+**Versão**: 2.0 - Com melhorias de análise e logs estruturados 
