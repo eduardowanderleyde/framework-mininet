@@ -16,6 +16,7 @@ import time
 import threading
 import csv
 import math
+import os
 
 
 def topology():
@@ -39,7 +40,8 @@ def topology():
 
     # Função de escaneamento e log em CSV
     def scan_and_log():
-        with open('rasp_car_log.csv', 'w', newline='') as csvfile:
+        log_filename = 'rasp_car_scan_log.csv'
+        with open(log_filename, 'w', newline='') as csvfile:
             fieldnames = ['timestamp', 'position', 'ap', 'rssi', 'distance', 'latency', 'connected']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
@@ -56,7 +58,19 @@ def topology():
                 
                 for ap in [modem, mesh1, mesh2]:
                     try:
-                        distance = rasp.getDistanceTo(ap)
+                        # Calcular distância manualmente usando coordenadas
+                        rasp_x = float(rasp.params.get('x', 0))
+                        rasp_y = float(rasp.params.get('y', 0))
+                        rasp_z = float(rasp.params.get('z', 0))
+                        
+                        ap_x = float(ap.params.get('x', 0))
+                        ap_y = float(ap.params.get('y', 0))
+                        ap_z = float(ap.params.get('z', 0))
+                        
+                        distance = math.sqrt((rasp_x - ap_x)**2 + (rasp_y - ap_y)**2 + (rasp_z - ap_z)**2)
+                        if distance < 0.01:
+                            distance = 0.01  # evitar log(0)
+                        
                         # RSSI mais realista baseado em modelo de propagação
                         # RSSI = Potência_transmissão - Perdas_espaço_livre - Perdas_adicionais
                         tx_power = 20  # dBm (potência de transmissão típica)
@@ -93,6 +107,11 @@ def topology():
                     csvfile.flush()
                     info(f"Log: {pos} -> {best_ap} (RSSI: {best_rssi:.1f} dBm, Dist: {best_distance:.1f}m, Lat: {latency:.1f}ms, Conn: {connected})\n")
                 time.sleep(2)
+        # Corrigir permissão do arquivo para o usuário normal
+        try:
+            os.system(f'chown $SUDO_USER:$SUDO_USER {log_filename}')
+        except Exception as e:
+            info(f"Erro ao ajustar permissão do log: {e}\n")
 
     # Função de mobilidade do rasp-car
     def move_rasp():
@@ -110,8 +129,9 @@ def topology():
     scan_thread.start()
     move_thread.start()
     
-    # Aguardar um pouco para ver os logs
-    time.sleep(15)
+    # Esperar as threads terminarem
+    scan_thread.join()
+    move_thread.join()
     
     info("*** Configurando conectividade\n")
     # Configurar IPs dos APs

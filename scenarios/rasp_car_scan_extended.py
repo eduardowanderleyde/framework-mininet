@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Cenário: Rasp-Car-Rout (Raspberry + Roteador móvel)
-===================================================
+Cenário: Rasp-Car Scanner (Versão Estendida)
+============================================
 - 1 modem principal (AP fixo, recebe internet)
-- 1 mesh fixo, 1 mesh móvel (mesh2)
-- 1 Raspberry Pi móvel (station) que se move junto com mesh2
-- Log em CSV do rasp-car
+- 2 roteadores mesh (APs mesh, interconectados)
+- 1 Raspberry Pi móvel (station) que escaneia e loga sinais Wi-Fi em CSV
+- Versão com mais dados e posições variadas
 """
 from mininet.node import Controller
 from mininet.log import setLogLevel, info
@@ -19,14 +19,18 @@ import csv
 import math
 import os
 
+
 def topology():
     net = Mininet_wifi(controller=Controller, link=wmediumd, accessPoint=OVSKernelAP)
     info("*** Criando nós\n")
     c0 = net.addController('c0', controller=Controller)
+    # Modem principal (AP fixo)
     modem = net.addAccessPoint('modem', ssid='Internet', mode='g', channel='1', position='10,30,0', range=58, dpid='1')
+    # Mesh routers
     mesh1 = net.addAccessPoint('mesh1', ssid='MeshNet', mode='g', channel='6', position='40,30,0', range=58, dpid='2')
     mesh2 = net.addAccessPoint('mesh2', ssid='MeshNet', mode='g', channel='11', position='70,30,0', range=58, dpid='3')
-    rasp = net.addStation('rasp', ip='10.0.0.10/24', position='15,25,0')
+    # Raspberry Pi móvel - posição inicial diferente
+    rasp = net.addStation('rasp', ip='10.0.0.10/24', position='25,25,0')
     net.setPropagationModel(model="logDistance", exp=3.5)
     net.configureWifiNodes()
     net.build()
@@ -35,13 +39,14 @@ def topology():
     mesh1.start([c0])
     mesh2.start([c0])
 
+    # Função de escaneamento e log em CSV
     def scan_and_log():
-        log_filename = 'rasp_car_rout_scan_log.csv'
+        log_filename = 'rasp_car_scan_extended_log.csv'
         with open(log_filename, 'w', newline='') as csvfile:
-            fieldnames = ['timestamp', 'position', 'ap', 'rssi', 'distance', 'latency', 'connected']
+            fieldnames = ['timestamp', 'position', 'ap', 'rssi', 'distance', 'latency', 'connected', 'signal_quality']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
-            for i in range(10):  # Executar apenas 10 vezes para teste
+            for i in range(20):  # Mais iterações
                 # Obter posição de forma mais segura
                 try:
                     pos = f"{rasp.params.get('x', 0)},{rasp.params.get('y', 0)},{rasp.params.get('z', 0)}"
@@ -68,7 +73,6 @@ def topology():
                             distance = 0.01  # evitar log(0)
                         
                         # RSSI mais realista baseado em modelo de propagação
-                        # RSSI = Potência_transmissão - Perdas_espaço_livre - Perdas_adicionais
                         tx_power = 20  # dBm (potência de transmissão típica)
                         freq = 2.4e9   # 2.4 GHz
                         c = 3e8        # velocidade da luz
@@ -90,6 +94,16 @@ def topology():
                 # Verificar conectividade (RSSI > -70 dBm)
                 connected = "YES" if best_rssi > -70 else "NO"
                 
+                # Qualidade do sinal baseada no RSSI
+                if best_rssi > -50:
+                    signal_quality = "EXCELLENT"
+                elif best_rssi > -60:
+                    signal_quality = "GOOD"
+                elif best_rssi > -70:
+                    signal_quality = "FAIR"
+                else:
+                    signal_quality = "POOR"
+                
                 if best_ap:
                     writer.writerow({
                         'timestamp': time.time(), 
@@ -98,29 +112,35 @@ def topology():
                         'rssi': round(best_rssi, 2),
                         'distance': round(best_distance, 2),
                         'latency': round(latency, 2),
-                        'connected': connected
+                        'connected': connected,
+                        'signal_quality': signal_quality
                     })
                     csvfile.flush()
-                    info(f"Log: {pos} -> {best_ap} (RSSI: {best_rssi:.1f} dBm, Dist: {best_distance:.1f}m, Lat: {latency:.1f}ms, Conn: {connected})\n")
-                time.sleep(2)
+                    info(f"Log: {pos} -> {best_ap} (RSSI: {best_rssi:.1f} dBm, Dist: {best_distance:.1f}m, Lat: {latency:.1f}ms, Conn: {connected}, Quality: {signal_quality})\n")
+                time.sleep(1)  # Mais rápido
         # Corrigir permissão do arquivo para o usuário normal
         try:
             os.system(f'chown $SUDO_USER:$SUDO_USER {log_filename}')
         except Exception as e:
             info(f"Erro ao ajustar permissão do log: {e}\n")
 
-    def move_rasp_and_mesh2():
-        positions = [(15,25,0), (35,30,0), (55,30,0), (75,30,0), (35,30,0), (15,25,0)]
-        for i in range(10):  # Executar apenas 10 vezes para teste
+    # Função de mobilidade do rasp-car com mais posições
+    def move_rasp():
+        positions = [
+            (25,25,0), (35,30,0), (45,30,0), (55,30,0), (65,30,0), (75,30,0),
+            (65,30,0), (55,30,0), (45,30,0), (35,30,0), (25,25,0), (15,25,0),
+            (25,25,0), (35,30,0), (45,30,0), (55,30,0), (65,30,0), (75,30,0),
+            (65,30,0), (55,30,0)
+        ]
+        for i in range(20):  # Mais iterações
             pos = positions[i % len(positions)]
             rasp.setPosition(f'{pos[0]},{pos[1]},{pos[2]}')
-            mesh2.setPosition(f'{pos[0]},{pos[1]},{pos[2]}')
-            info(f"Raspberry e Mesh2 movidos para: {pos}\n")
-            time.sleep(3)
+            info(f"Raspberry movido para: {pos}\n")
+            time.sleep(1.5)  # Mais rápido
 
     info("*** Iniciando threads de mobilidade e escaneamento\n")
     scan_thread = threading.Thread(target=scan_and_log, daemon=True)
-    move_thread = threading.Thread(target=move_rasp_and_mesh2, daemon=True)
+    move_thread = threading.Thread(target=move_rasp, daemon=True)
     
     scan_thread.start()
     move_thread.start()
@@ -140,18 +160,6 @@ def topology():
     
     info("*** Testando conectividade\n")
     net.pingAll()
-    
-    # Teste de throughput simples
-    info("*** Testando throughput\n")
-    try:
-        # Iniciar servidor iperf no modem
-        modem.cmd('iperf -s -t 5 &')
-        time.sleep(1)
-        # Teste de throughput do raspberry para o modem
-        result = rasp.cmd('iperf -c 10.0.0.1 -t 3')
-        info(f"Throughput teste: {result}\n")
-    except Exception as e:
-        info(f"Erro no teste de throughput: {e}\n")
     
     info("*** Parando rede\n")
     net.stop()

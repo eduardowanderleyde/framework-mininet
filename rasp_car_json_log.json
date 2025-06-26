@@ -1,0 +1,862 @@
+{
+  "scenario": "rasp_car_json_log",
+  "description": "Raspberry Pi mobile scanning with JSON logging",
+  "total_iterations": 15,
+  "logs": [
+    {
+      "timestamp": 1750968115.9497573,
+      "timestamp_readable": "2025-06-26 17:01:55",
+      "iteration": 1,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968117.4499943,
+      "timestamp_readable": "2025-06-26 17:01:57",
+      "iteration": 2,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968118.95025,
+      "timestamp_readable": "2025-06-26 17:01:58",
+      "iteration": 3,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968120.4505272,
+      "timestamp_readable": "2025-06-26 17:02:00",
+      "iteration": 4,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968121.9507809,
+      "timestamp_readable": "2025-06-26 17:02:01",
+      "iteration": 5,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968123.451064,
+      "timestamp_readable": "2025-06-26 17:02:03",
+      "iteration": 6,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968124.9513245,
+      "timestamp_readable": "2025-06-26 17:02:04",
+      "iteration": 7,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968126.4515948,
+      "timestamp_readable": "2025-06-26 17:02:06",
+      "iteration": 8,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968127.9518497,
+      "timestamp_readable": "2025-06-26 17:02:07",
+      "iteration": 9,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968129.4521203,
+      "timestamp_readable": "2025-06-26 17:02:09",
+      "iteration": 10,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968130.9523795,
+      "timestamp_readable": "2025-06-26 17:02:10",
+      "iteration": 11,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968132.4526443,
+      "timestamp_readable": "2025-06-26 17:02:12",
+      "iteration": 12,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968133.9528942,
+      "timestamp_readable": "2025-06-26 17:02:13",
+      "iteration": 13,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968135.4531407,
+      "timestamp_readable": "2025-06-26 17:02:15",
+      "iteration": 14,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    },
+    {
+      "timestamp": 1750968136.9533923,
+      "timestamp_readable": "2025-06-26 17:02:16",
+      "iteration": 15,
+      "position": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "available_aps": [
+        {
+          "name": "modem",
+          "ssid": "Internet",
+          "channel": "1",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh1",
+          "ssid": "MeshNet",
+          "channel": "6",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        },
+        {
+          "name": "mesh2",
+          "ssid": "MeshNet",
+          "channel": "11",
+          "rssi": 9.95,
+          "distance": 0.01,
+          "latency": 5.0,
+          "connected": true,
+          "signal_strength": "strong"
+        }
+      ],
+      "best_ap": {
+        "name": "modem",
+        "ssid": "Internet",
+        "channel": "1",
+        "rssi": 9.95,
+        "distance": 0.01,
+        "latency": 5.0,
+        "connected": true,
+        "signal_strength": "strong"
+      },
+      "network_status": {
+        "total_aps": 3,
+        "connected_aps": 3,
+        "best_signal": 9.95
+      }
+    }
+  ]
+}
