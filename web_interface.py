@@ -15,12 +15,29 @@ import seaborn as sns
 import io
 import base64
 import numpy as np
+from PIL import Image
 
 app = Flask(__name__)
 
 # Configurar estilo dos gráficos
 plt.style.use('default')
 sns.set_palette("husl")
+
+def convert_png_to_jpeg(png_path, jpeg_path=None):
+    """Converter arquivo PNG para JPEG"""
+    try:
+        if jpeg_path is None:
+            jpeg_path = png_path.replace('.png', '.jpg')
+        
+        with Image.open(png_path) as img:
+            # Converter para RGB se necessário
+            if img.mode in ('RGBA', 'LA', 'P'):
+                img = img.convert('RGB')
+            img.save(jpeg_path, 'JPEG', quality=85)
+        return jpeg_path
+    except Exception as e:
+        print(f"Erro ao converter {png_path}: {e}")
+        return None
 
 def get_available_logs():
     """Obter lista de logs CSV disponíveis"""
@@ -46,8 +63,14 @@ def get_available_graphs():
     graphs = []
     for file in png_files:
         if file.endswith('.png'):
+            # Tentar converter para JPEG se não existir
+            jpeg_file = file.replace('.png', '.jpg')
+            if not os.path.exists(jpeg_file):
+                convert_png_to_jpeg(file, jpeg_file)
+            
             graphs.append({
                 'filename': file,
+                'jpeg_filename': jpeg_file if os.path.exists(jpeg_file) else file,
                 'type': 'RSSI' if 'rssi_over_time' in file else 'AP Performance' if 'ap_performance' in file else 'Mobility Path',
                 'last_modified': datetime.fromtimestamp(os.path.getmtime(file)).strftime('%Y-%m-%d %H:%M:%S')
             })
@@ -214,6 +237,29 @@ def view_log(filename):
 def view_graph(filename):
     """Visualizar gráfico específico"""
     return render_template('view_graph.html', filename=filename)
+
+@app.route('/static/images/<filename>')
+def serve_image(filename):
+    """Servir arquivos de imagem estáticos"""
+    try:
+        # Tentar servir o arquivo original
+        if os.path.exists(filename):
+            return send_file(filename, mimetype='image/png')
+        
+        # Se não existir, tentar converter PNG para JPEG
+        if filename.endswith('.png'):
+            jpeg_file = filename.replace('.png', '.jpg')
+            if os.path.exists(jpeg_file):
+                return send_file(jpeg_file, mimetype='image/jpeg')
+            else:
+                # Converter PNG para JPEG
+                converted = convert_png_to_jpeg(filename, jpeg_file)
+                if converted and os.path.exists(converted):
+                    return send_file(converted, mimetype='image/jpeg')
+        
+        return "Imagem não encontrada", 404
+    except Exception as e:
+        return f"Erro ao servir imagem: {str(e)}", 500
 
 @app.route('/api/logs')
 def api_logs():
