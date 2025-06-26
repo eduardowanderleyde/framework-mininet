@@ -79,7 +79,9 @@ def topology():
                 
                 # Obter posição de forma mais segura
                 try:
-                    pos = f"{rasp.params.get('x', 0)},{rasp.params.get('y', 0)},{rasp.params.get('z', 0)}"
+                    # Usar o método correto para obter a posição atual
+                    position = rasp.position
+                    pos = f"{position[0]},{position[1]},{position[2]}"
                 except:
                     pos = "0,0,0"
                 
@@ -90,13 +92,15 @@ def topology():
                 for ap in [modem, mesh1, mesh2]:
                     try:
                         # Calcular distância manualmente usando coordenadas
-                        rasp_x = float(rasp.params.get('x', 0))
-                        rasp_y = float(rasp.params.get('y', 0))
-                        rasp_z = float(rasp.params.get('z', 0))
+                        rasp_pos = rasp.position
+                        rasp_x = rasp_pos[0]
+                        rasp_y = rasp_pos[1]
+                        rasp_z = rasp_pos[2]
                         
-                        ap_x = float(ap.params.get('x', 0))
-                        ap_y = float(ap.params.get('y', 0))
-                        ap_z = float(ap.params.get('z', 0))
+                        ap_pos = ap.position
+                        ap_x = ap_pos[0]
+                        ap_y = ap_pos[1]
+                        ap_z = ap_pos[2]
                         
                         distance = math.sqrt((rasp_x - ap_x)**2 + (rasp_y - ap_y)**2 + (rasp_z - ap_z)**2)
                         if distance < 0.01:
