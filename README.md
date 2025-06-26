@@ -52,6 +52,15 @@ framework-mininet/
 - **1 roteador mesh móvel**: mesh2 (move junto com Raspberry)
 - **Raspberry Pi**: Móvel, sincronizado com mesh2
 
+### 3. 🎯 Mastering Scenario 1
+- **Ambiente**: Espaço vazio 100m x 100m (sem obstáculos)
+- **🔌 Roteador 1 (Backbone)**: Fixo em (0,0), conectado à internet via cabo
+- **📡 Roteador 2 (Repetidor)**: Fixo em (50,50), repetidor mesh
+- **🚗 Roteador 3 (Móvel)**: Em carrinho com rodas, se move entre waypoints
+- **📱 Raspberry Pi**: No carrinho, escaneia qualidade da rede mesh
+- **🎯 Trajetória**: Carrinho passa próximo aos roteadores para testar conectividade
+- **📊 Métricas**: RSSI, distância, latência, throughput, handover, perda de pacotes
+
 ## 🛠️ Instalação
 
 ### Pré-requisitos
@@ -132,6 +141,9 @@ python3 run_scenario.py basic
 python3 run_scenario.py mesh
 python3 run_scenario.py interference
 python3 run_scenario.py sdn
+
+# 🎯 Executar Mastering Scenario 1
+python3 run_scenario.py mastering-1
 ```
 
 **Vantagens do Script Wrapper:**
@@ -362,6 +374,9 @@ python3 run_scenario.py --help
 
 # Executar cenário com modo verboso
 python3 run_scenario.py rasp-car-rout -v
+
+# 🎯 Executar Mastering Scenario 1
+python3 run_scenario.py mastering-1
 ```
 
 ### Linha de Comando (Método Manual)

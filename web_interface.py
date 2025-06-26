@@ -347,6 +347,53 @@ def execute_scenario(scenario_id):
         execution_status['running'] = False
         execution_status['current_scenario'] = None
 
+def get_scenarios():
+    """Retorna lista de cenários disponíveis"""
+    return [
+        {
+            'id': 'basic',
+            'name': 'Cenário Básico Wi-Fi',
+            'file': 'scenarios/basic_wifi.py',
+            'description': 'Cenário básico Wi-Fi com AP e estações'
+        },
+        {
+            'id': 'mesh',
+            'name': 'Rede Mesh com Mobilidade',
+            'file': 'scenarios/mesh_mobility.py',
+            'description': 'Rede mesh com mobilidade'
+        },
+        {
+            'id': 'interference',
+            'name': 'Teste de Interferência',
+            'file': 'scenarios/interference_test.py',
+            'description': 'Teste de interferência entre APs'
+        },
+        {
+            'id': 'sdn',
+            'name': 'Validação SDN',
+            'file': 'scenarios/sdn_wifi_test.py',
+            'description': 'Validação SDN com Wi-Fi'
+        },
+        {
+            'id': 'rasp-car',
+            'name': 'Raspberry Pi Scanner',
+            'file': 'scenarios/rasp_car_scan.py',
+            'description': 'Raspberry Pi móvel escaneando rede mesh'
+        },
+        {
+            'id': 'rasp-car-rout',
+            'name': 'Raspberry Pi + Roteador Móvel',
+            'file': 'scenarios/rasp_car_rout_scan.py',
+            'description': 'Raspberry Pi + roteador móvel em carrinho'
+        },
+        {
+            'id': 'mastering-1',
+            'name': '🎯 Mastering Scenario 1',
+            'file': 'scenarios/mastering-scenario-1.py',
+            'description': '3 roteadores mesh + Raspberry Pi móvel em carrinho'
+        }
+    ]
+
 if __name__ == '__main__':
     print("🌐 Iniciando Interface Web do Framework Mininet-WiFi")
     print("📱 Acesse: http://localhost:5000")
