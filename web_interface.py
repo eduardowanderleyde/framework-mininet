@@ -130,6 +130,15 @@ def download_log(filename):
     
     return send_file(filename, as_attachment=True)
 
+@app.route('/api/list_graphs')
+def list_graphs():
+    """Lista os gráficos de mobilidade gerados (PNG)"""
+    png_files = [f for f in os.listdir('.') if f.startswith('mobility_path_') and f.endswith('.png')]
+    # Ordenar do mais recente para o mais antigo
+    png_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
+    # Retornar caminhos relativos
+    return jsonify({'graphs': png_files})
+
 def execute_scenario(scenario_id):
     """Executa um cenário em background"""
     global execution_status

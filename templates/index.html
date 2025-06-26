@@ -312,8 +312,20 @@
                     <div class="progress-bar">
                         <div class="progress-fill" id="progressFill"></div>
                     </div>
-                    <div id="progressText">0%</div>
-                    <div class="log-container" id="executionLog"></div>
+                    <div id="progressText"></div>
+                </div>
+
+                <!-- Painel de Log em Tempo Real -->
+                <div class="log-container" id="logContainer" style="display:none; margin-bottom: 30px;">
+                    <strong>Log em tempo real:</strong>
+                    <pre id="logContent"></pre>
+                </div>
+
+                <!-- Painel de Gráfico de Mobilidade -->
+                <div class="section" id="mobilityGraphSection" style="display:none;">
+                    <h2>Gráfico de Mobilidade</h2>
+                    <img id="mobilityGraphImg" src="" alt="Gráfico de Mobilidade" style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
+                    <button class="btn" onclick="updateMobilityGraph()">Atualizar Gráfico</button>
                 </div>
             </div>
 
@@ -484,6 +496,38 @@
         document.addEventListener('DOMContentLoaded', function() {
             refreshLogs();
         });
+
+        // Atualização do log em tempo real
+        function updateLog() {
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.log && data.log.length > 0) {
+                        document.getElementById('logContainer').style.display = 'block';
+                        document.getElementById('logContent').textContent = data.log.join('\n');
+                    } else {
+                        document.getElementById('logContainer').style.display = 'none';
+                    }
+                });
+        }
+        setInterval(updateLog, 2000);
+
+        // Atualização do gráfico de mobilidade
+        function updateMobilityGraph() {
+            // Supondo que o PNG gerado tenha o nome 'mobility_path_<data>.png' e esteja na pasta raiz
+            fetch('/api/list_graphs')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.graphs && data.graphs.length > 0) {
+                        // Pega o gráfico mais recente
+                        let latest = data.graphs[0];
+                        document.getElementById('mobilityGraphImg').src = latest;
+                        document.getElementById('mobilityGraphSection').style.display = 'block';
+                    } else {
+                        document.getElementById('mobilityGraphSection').style.display = 'none';
+                    }
+                });
+        }
     </script>
 </body>
 </html> 

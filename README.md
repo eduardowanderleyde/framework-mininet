@@ -9,6 +9,9 @@ Framework completo para simulação de redes Wi-Fi mesh realistas usando Mininet
 - **Análise Avançada**: Ferramenta de análise com gráficos e estatísticas
 - **Testes de Performance**: Throughput e conectividade automatizados
 - **Mobilidade Dinâmica**: Movimento realista de dispositivos
+- **🌐 Interface Web**: Interface visual completa para executar cenários e visualizar resultados
+- **📊 Progresso Visual**: Logs passo a passo com emojis e contadores de progresso
+- **🔧 Script Wrapper**: Execução simplificada com configuração automática
 
 ## 📁 Estrutura do Projeto
 
@@ -25,6 +28,11 @@ framework-mininet/
 │   ├── install_mininet.py    # Instalação automatizada
 │   ├── throughput_test.py    # Teste de throughput
 │   └── analyze_logs.py       # 📊 Análise de logs CSV
+├── templates/                # Templates da interface web
+│   └── index.html           # Interface principal
+├── web_interface.py         # 🌐 Servidor da interface web
+├── start_interface.py       # 🚀 Script para iniciar interface
+├── run_scenario.py          # 🔧 Script wrapper para executar cenários
 ├── logs/                     # Logs gerados
 ├── requirements.txt          # Dependências Python
 └── README.md                # Este arquivo
@@ -67,27 +75,134 @@ cd mininet-wifi
 sudo util/install.sh -Wlnfv
 ```
 
-## 🚀 Como Usar
+## 🌐 Interface Web (Recomendado)
 
-### 1. Executar Cenários
+### Como Usar a Interface Web
+
+1. **Iniciar a Interface:**
+```bash
+python3 start_interface.py
+```
+
+2. **Acessar no Navegador:**
+```
+http://localhost:5000
+```
+
+3. **Executar Cenários:**
+   - Clique em **"▶️ Executar"** no cenário desejado
+   - Acompanhe o progresso em tempo real
+   - Veja o log de execução ao vivo
+   - Visualize os resultados gerados
+
+4. **Recursos da Interface:**
+   - ✅ **Execução Visual**: Clique e execute cenários
+   - ✅ **Log em Tempo Real**: Veja o que está acontecendo
+   - ✅ **Progresso Visual**: Barra de progresso em tempo real
+   - ✅ **Visualização de Logs**: Veja os dados gerados
+   - ✅ **Gráficos de Mobilidade**: Visualize o caminho percorrido
+   - ✅ **Download de Logs**: Baixe os arquivos CSV/JSON
+
+### Funcionalidades da Interface
+
+- **🎯 Cenários Disponíveis**: Lista todos os cenários com descrições
+- **⚡ Status de Execução**: Progresso e log em tempo real
+- **📊 Logs Gerados**: Visualize, baixe e analise logs
+- **📋 Visualizador de Dados**: Veja o conteúdo dos logs
+- **🗺️ Gráficos de Mobilidade**: Visualize o caminho percorrido
+
+## 🚀 Como Usar (Linha de Comando)
+
+### 🔧 Script Wrapper (Recomendado)
+
+O script `run_scenario.py` facilita a execução dos cenários com configuração automática do PYTHONPATH:
+
+```bash
+# Ver cenários disponíveis
+python3 run_scenario.py --help
+
+# Executar cenário Rasp-Car
+python3 run_scenario.py rasp-car
+
+# Executar cenário Rasp-Car-Rout
+python3 run_scenario.py rasp-car-rout
+
+# Executar outros cenários
+python3 run_scenario.py basic
+python3 run_scenario.py mesh
+python3 run_scenario.py interference
+python3 run_scenario.py sdn
+```
+
+**Vantagens do Script Wrapper:**
+- ✅ **Configuração Automática**: PYTHONPATH configurado automaticamente
+- ✅ **Execução Simplificada**: Comando único para executar cenários
+- ✅ **Progresso Visual**: Logs passo a passo com emojis e contadores
+- ✅ **Tratamento de Erros**: Mensagens claras de erro e ajuda
+- ✅ **Execução com Sudo**: Gerencia automaticamente privilégios de root
+
+### 📊 Exemplo de Saída com Progresso Visual
+
+```
+🎯 Framework Mininet-WiFi - Executor de Cenários
+============================================================
+🚀 Executando cenário: rasp-car
+📁 Arquivo: scenarios/rasp_car_scan.py
+🔧 PYTHONPATH configurado: /usr/local/lib/python3.12/dist-packages
+============================================================
+ℹ️  🚀 Iniciando simulação Rasp-Car Scanner...
+ℹ️  📡 Criando rede Wi-Fi mesh...
+ℹ️  🔌 Configurando modem principal...
+ℹ️  🌐 Configurando roteadores mesh...
+ℹ️  📱 Configurando Raspberry Pi móvel...
+ℹ️  ⚙️  Configurando modelo de propagação...
+ℹ️  🔨 Construindo rede...
+ℹ️  🎮 Iniciando controlador...
+ℹ️  📶 Ativando access points...
+ℹ️  ✅ Rede Wi-Fi mesh ativada com sucesso!
+ℹ️  🔄 Iniciando threads de mobilidade e escaneamento...
+ℹ️  📊 Iniciando sistema de escaneamento e log...
+ℹ️  🚗 Iniciando mobilidade do Raspberry Pi...
+🔄 [10%] 🔍 Escaneando rede (ciclo 1/10)...
+ℹ️  🟢 Posição: 15,25,0 | AP: modem | RSSI: -45.2 dBm | Dist: 5.5m | Lat: 5.6ms
+🔄 [10%] 📍 Raspberry movido para: (15, 25, 0)
+🔄 [20%] 🔍 Escaneando rede (ciclo 2/10)...
+ℹ️  🟢 Posição: 35,30,0 | AP: mesh1 | RSSI: -52.7 dBm | Dist: 25.3m | Lat: 7.5ms
+🔄 [20%] 📍 Raspberry movido para: (35, 30, 0)
+...
+ℹ️  💾 Log salvo em: rasp_car_scan_log.csv
+ℹ️  🔐 Permissões do arquivo ajustadas
+ℹ️  🏁 Mobilidade concluída!
+ℹ️  🌐 Configurando conectividade de rede...
+ℹ️  🔍 Testando conectividade entre dispositivos...
+ℹ️  📈 Testando throughput da rede...
+ℹ️  🛑 Finalizando simulação...
+ℹ️  ✅ Simulação Rasp-Car Scanner concluída com sucesso!
+============================================================
+✅ Cenário executado com sucesso!
+🎉 Execução concluída!
+```
+
+### 1. Executar Cenários (Método Manual)
+
 ```bash
 # Configurar PYTHONPATH
-export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.*/dist-packages
+export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.12/dist-packages:/usr/local/lib/python3.12/dist-packages/mininet_wifi-2.6-py3.12.egg
 
 # Rasp-Car Scanner
-python3 scenarios/rasp_car_scan.py
+sudo python3 scenarios/rasp_car_scan.py
 
 # Rasp-Car-Rout (móvel)
-python3 scenarios/rasp_car_rout_scan.py
+sudo python3 scenarios/rasp_car_rout_scan.py
 ```
 
 ### 2. Analisar Logs
 ```bash
 # Análise completa com gráficos
-python3 tools/analyze_logs.py rasp_car_log.csv
+python3 tools/analyze_logs.py rasp_car_scan_log.csv
 
 # Análise sem gráficos
-python3 tools/analyze_logs.py rasp_car_rout_log.csv --no-plots
+python3 tools/analyze_logs.py rasp_car_rout_scan_log.csv --no-plots
 ```
 
 ### 3. Teste de Throughput
@@ -155,13 +270,23 @@ mesh2 = net.addAccessPoint('mesh2', ..., channel='11')  # 2.462 GHz
 - [x] Teste de throughput automatizado
 - [x] Ferramenta de análise de logs com gráficos
 - [x] Logs estruturados em CSV
+- [x] 🌐 Interface web completa
+- [x] Log em tempo real durante execução
+- [x] Visualização de gráficos de mobilidade
+- [x] Execução de cenários via interface web
+- [x] Configuração sudoers para execução sem senha
+- [x] 📊 **Progresso visual passo a passo** com emojis e contadores
+- [x] 🔧 **Script wrapper** para execução simplificada
+- [x] **Logs informativos** mostrando cada etapa da simulação
+- [x] **Configuração automática** do PYTHONPATH
+- [x] **Mensagens de erro claras** e ajuda integrada
 
 ### 🔄 Próximas Melhorias
 - [ ] Simulação de obstáculos e paredes
 - [ ] Modelo de interferência mais realista
 - [ ] Handoff automático entre APs
-- [ ] Interface web para visualização
 - [ ] Mais cenários de teste
+- [ ] Análise automática após execução
 
 ## 🐛 Solução de Problemas
 
@@ -186,25 +311,73 @@ net = Mininet_wifi(controller=Controller, link=wmediumd, accessPoint=OVSKernelAP
 sudo apt install iperf
 ```
 
+### Erro: "matplotlib not found"
+```bash
+# Instalar matplotlib
+pip3 install matplotlib
+```
+
+### Interface Web não Inicia
+```bash
+# Verificar se a porta 5000 está livre
+sudo lsof -i :5000
+# Se necessário, matar processo
+sudo kill -9 <PID>
+
+# Ou usar porta diferente
+python3 start_interface.py --port 5001
+```
+
+### Problemas com PYTHONPATH
+```bash
+# Usar o script wrapper (recomendado)
+python3 run_scenario.py rasp-car
+
+# Ou configurar manualmente
+export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.12/dist-packages:/usr/local/lib/python3.12/dist-packages/mininet_wifi-2.6-py3.12.egg
+```
+
 ## 📝 Exemplos de Uso
 
-### Cenário Básico
+### Interface Web (Recomendado)
 ```bash
+# 1. Iniciar interface
+python3 start_interface.py
+
+# 2. Acessar no navegador
+# http://localhost:5000
+
+# 3. Clicar em "Executar" no cenário desejado
+# 4. Acompanhar progresso e logs
+# 5. Visualizar resultados
+```
+
+### Script Wrapper (Recomendado)
+```bash
+# Executar cenário com progresso visual
+python3 run_scenario.py rasp-car
+
+# Ver todos os cenários disponíveis
+python3 run_scenario.py --help
+
+# Executar cenário com modo verboso
+python3 run_scenario.py rasp-car-rout -v
+```
+
+### Linha de Comando (Método Manual)
+```bash
+# Configurar ambiente
+export PYTHONPATH=$PYTHONPATH:/usr/local/lib/python3.12/dist-packages:/usr/local/lib/python3.12/dist-packages/mininet_wifi-2.6-py3.12.egg
+
 # Executar cenário básico
-python3 scenarios/basic_wifi.py
-```
+sudo python3 scenarios/basic_wifi.py
 
-### Teste de Interferência
-```bash
-# Executar teste de interferência
-python3 scenarios/interference_test.py
-```
+# Teste de interferência
+sudo python3 scenarios/interference_test.py
 
-### Análise Comparativa
-```bash
-# Comparar performance dos dois cenários
-python3 tools/analyze_logs.py rasp_car_log.csv
-python3 tools/analyze_logs.py rasp_car_rout_log.csv
+# Análise comparativa
+python3 tools/analyze_logs.py rasp_car_scan_log.csv
+python3 tools/analyze_logs.py rasp_car_rout_scan_log.csv
 ```
 
 ## 🤝 Contribuição
@@ -233,4 +406,4 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 ---
 
 **Última atualização**: Dezembro 2024
-**Versão**: 2.0 - Com melhorias de análise e logs estruturados 
+**Versão**: 4.0 - Com progresso visual e script wrapper simplificado 

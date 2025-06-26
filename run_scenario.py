@@ -1,80 +1,89 @@
 #!/usr/bin/env python3
 """
-Script wrapper para executar cenários Mininet-WiFi
-Ajusta o PYTHONPATH automaticamente e executa com sudo
+Script wrapper para executar cenários do Mininet-WiFi
+Facilita a execução com PYTHONPATH configurado automaticamente
 """
 import sys
 import os
 import subprocess
+import argparse
 
-def run_scenario(scenario_name):
+def setup_environment():
+    """Configura o ambiente para execução do Mininet-WiFi"""
+    # Adicionar paths do Mininet-WiFi ao PYTHONPATH
+    mininet_path = "/usr/local/lib/python3.12/dist-packages"
+    mn_wifi_path = "/usr/local/lib/python3.12/dist-packages/mininet_wifi-2.6-py3.12.egg"
+    
+    current_pythonpath = os.environ.get('PYTHONPATH', '')
+    new_pythonpath = f"{current_pythonpath}:{mininet_path}:{mn_wifi_path}"
+    
+    os.environ['PYTHONPATH'] = new_pythonpath
+    return new_pythonpath
+
+def run_scenario(scenario_name, verbose=False):
     """Executa um cenário específico"""
-    # Executar o cenário com sudo
-    scenario_file = f'scenarios/{scenario_name}.py'
-    if not os.path.exists(scenario_file):
-        print(f"❌ Cenário {scenario_file} não encontrado!")
+    setup_environment()
+    
+    # Mapear nomes amigáveis para arquivos
+    scenarios = {
+        'rasp-car': 'scenarios/rasp_car_scan.py',
+        'rasp-car-rout': 'scenarios/rasp_car_rout_scan.py',
+        'basic': 'scenarios/basic_wifi.py',
+        'mesh': 'scenarios/mesh_mobility.py',
+        'interference': 'scenarios/interference_test.py',
+        'sdn': 'scenarios/sdn_wifi_test.py'
+    }
+    
+    if scenario_name not in scenarios:
+        print(f"❌ Cenário '{scenario_name}' não encontrado!")
+        print("📋 Cenários disponíveis:")
+        for name, path in scenarios.items():
+            print(f"   • {name} -> {path}")
+        return False
+    
+    scenario_path = scenarios[scenario_name]
+    
+    if not os.path.exists(scenario_path):
+        print(f"❌ Arquivo do cenário não encontrado: {scenario_path}")
         return False
     
     print(f"🚀 Executando cenário: {scenario_name}")
-    print(f"📁 Arquivo: {scenario_file}")
-    print("⏳ Aguarde... (pode demorar alguns segundos)")
-    print("🔐 Executando com sudo (Mininet-WiFi requer privilégios de root)")
+    print(f"📁 Arquivo: {scenario_path}")
+    print(f"🔧 PYTHONPATH configurado: {os.environ['PYTHONPATH']}")
+    print("=" * 60)
     
     try:
-        # Executar com sudo e PYTHONPATH ajustado
-        cmd = [
-            'sudo', 'PYTHONPATH=/usr/local/lib/python3.12/dist-packages', 
-            'python3', scenario_file
-        ]
-        
-        result = subprocess.run(cmd, 
-                              capture_output=True, 
-                              text=True, 
-                              timeout=60)
-        
-        if result.returncode == 0:
-            print("✅ Cenário executado com sucesso!")
-            print("📊 Logs gerados:")
-            
-            # Verificar logs gerados
-            log_files = [f'{scenario_name}_log.csv', f'{scenario_name}_rout_log.csv']
-            for log_file in log_files:
-                if os.path.exists(log_file):
-                    size = os.path.getsize(log_file)
-                    if size > 0:
-                        print(f"   📄 {log_file} ({size} bytes)")
-                        # Mostrar primeiras linhas
-                        with open(log_file, 'r') as f:
-                            lines = f.readlines()
-                            print(f"   📋 {len(lines)} linhas")
-                            if len(lines) > 1:
-                                print(f"   📊 Dados: {len(lines)-1} registros")
-                                # Mostrar alguns dados de exemplo
-                                print("   📈 Exemplo de dados:")
-                                for i, line in enumerate(lines[1:4]):  # Primeiras 3 linhas de dados
-                                    print(f"      {line.strip()}")
-                    else:
-                        print(f"   ⚠️  {log_file} (vazio)")
-                else:
-                    print(f"   ❌ {log_file} (não encontrado)")
-        else:
-            print("❌ Erro ao executar cenário:")
-            print(result.stderr)
-            
-    except subprocess.TimeoutExpired:
-        print("⏰ Timeout - cenário demorou muito para executar")
-    except Exception as e:
-        print(f"❌ Erro: {e}")
+        # Executar com sudo
+        cmd = ['sudo', 'python3', scenario_path]
+        result = subprocess.run(cmd, check=True, text=True)
+        print("=" * 60)
+        print("✅ Cenário executado com sucesso!")
+        return True
+    except subprocess.CalledProcessError as e:
+        print(f"❌ Erro ao executar cenário: {e}")
+        return False
+    except KeyboardInterrupt:
+        print("\n⏹️  Execução interrompida pelo usuário")
+        return False
+
+def main():
+    parser = argparse.ArgumentParser(description='Executar cenários do Mininet-WiFi')
+    parser.add_argument('scenario', help='Nome do cenário para executar')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Modo verboso')
     
-    return True
+    args = parser.parse_args()
+    
+    print("🎯 Framework Mininet-WiFi - Executor de Cenários")
+    print("=" * 60)
+    
+    success = run_scenario(args.scenario, args.verbose)
+    
+    if success:
+        print("🎉 Execução concluída!")
+        sys.exit(0)
+    else:
+        print("💥 Execução falhou!")
+        sys.exit(1)
 
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print("Uso: python3 run_scenario.py <cenario>")
-        print("Cenários disponíveis:")
-        print("  - rasp_car_scan")
-        print("  - rasp_car_rout_scan")
-        sys.exit(1)
-    
-    scenario = sys.argv[1]
-    run_scenario(scenario) 
+    main() 
