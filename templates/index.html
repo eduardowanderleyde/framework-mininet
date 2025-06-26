@@ -198,8 +198,12 @@
 
         .log-info {
             font-size: 0.9em;
-            color: #6c757d;
+            color: #7f8c8d;
             margin-bottom: 10px;
+        }
+
+        .log-info div {
+            margin-bottom: 5px;
         }
 
         .status-indicator {
@@ -232,20 +236,20 @@
         .alert {
             padding: 15px;
             border-radius: 8px;
-            margin: 15px 0;
+            margin: 20px 0;
             display: none;
         }
 
         .alert-success {
             background: #d4edda;
-            color: #155724;
             border: 1px solid #c3e6cb;
+            color: #155724;
         }
 
         .alert-error {
             background: #f8d7da;
-            color: #721c24;
             border: 1px solid #f5c6cb;
+            color: #721c24;
         }
 
         .data-viewer {
@@ -264,6 +268,125 @@
             padding: 15px;
             border-radius: 5px;
             overflow-x: auto;
+        }
+
+        /* Estilos para análise de dados */
+        .analysis-summary {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-item {
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .analysis-section {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .analysis-section h5 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+
+        .analysis-section h6 {
+            color: #34495e;
+            margin: 15px 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .ap-distribution {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .ap-item {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        /* Estilos para tabelas de dados */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 15px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+
+        .data-table th,
+        .data-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .data-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .data-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        /* Estilos para paginação */
+        .pagination-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .pagination-controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .pagination-controls .btn {
+            margin: 0 10px;
         }
 
         @media (max-width: 768px) {
@@ -444,6 +567,8 @@
                         </div>
                         <button class="btn" onclick="viewLog('${log.file}')">👁️ Visualizar</button>
                         <button class="btn" onclick="downloadLog('${log.file}')">⬇️ Download</button>
+                        ${log.format === 'CSV' ? `<button class="btn btn-success" onclick="analyzeCSV('${log.file}')">📊 Analisar</button>` : ''}
+                        ${log.format === 'CSV' ? `<button class="btn btn-success" onclick="viewCSVData('${log.file}')">📋 Ver Dados</button>` : ''}
                     `;
                     logsGrid.appendChild(logCard);
                 });
@@ -473,6 +598,187 @@
                 }
             } catch (error) {
                 showAlert('error', 'Erro ao visualizar log: ' + error.message);
+            }
+        }
+
+        // Analisar CSV
+        async function analyzeCSV(filename) {
+            try {
+                const response = await fetch(`/api/analyze_csv/${filename}`);
+                const data = await response.json();
+                
+                const viewer = document.getElementById('dataViewer');
+                
+                let html = `
+                    <h4>📊 Análise Detalhada: ${filename}</h4>
+                    <div class="analysis-summary">
+                        <div class="summary-item">
+                            <strong>📈 Total de Linhas:</strong> ${data.total_rows}
+                        </div>
+                        <div class="summary-item">
+                            <strong>📄 Tamanho do Arquivo:</strong> ${(data.file_size / 1024).toFixed(2)} KB
+                        </div>
+                        <div class="summary-item">
+                            <strong>🕒 Última Modificação:</strong> ${data.last_modified}
+                        </div>
+                    </div>
+                `;
+                
+                // Análise de RSSI
+                if (data.rssi_analysis) {
+                    html += `
+                        <div class="analysis-section">
+                            <h5>📶 Análise de RSSI</h5>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <strong>Mínimo:</strong> ${data.rssi_analysis.min_rssi.toFixed(2)} dBm
+                                </div>
+                                <div class="stat-item">
+                                    <strong>Máximo:</strong> ${data.rssi_analysis.max_rssi.toFixed(2)} dBm
+                                </div>
+                                <div class="stat-item">
+                                    <strong>Média:</strong> ${data.rssi_analysis.avg_rssi.toFixed(2)} dBm
+                                </div>
+                                <div class="stat-item">
+                                    <strong>Variação:</strong> ${data.rssi_analysis.rssi_range.toFixed(2)} dBm
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Análise de Distância
+                if (data.distance_analysis) {
+                    html += `
+                        <div class="analysis-section">
+                            <h5>📏 Análise de Distância</h5>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <strong>Mínima:</strong> ${data.distance_analysis.min_distance.toFixed(2)}m
+                                </div>
+                                <div class="stat-item">
+                                    <strong>Máxima:</strong> ${data.distance_analysis.max_distance.toFixed(2)}m
+                                </div>
+                                <div class="stat-item">
+                                    <strong>Média:</strong> ${data.distance_analysis.avg_distance.toFixed(2)}m
+                                </div>
+                                <div class="stat-item">
+                                    <strong>Total Percorrido:</strong> ${data.distance_analysis.total_distance_covered.toFixed(2)}m
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Análise de APs
+                if (data.ap_analysis) {
+                    html += `
+                        <div class="analysis-section">
+                            <h5>🌐 Análise de Access Points</h5>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <strong>APs Únicos:</strong> ${data.ap_analysis.unique_aps}
+                                </div>
+                                <div class="stat-item">
+                                    <strong>Mais Usado:</strong> ${data.ap_analysis.most_used_ap || 'N/A'}
+                                </div>
+                            </div>
+                            <h6>Distribuição por AP:</h6>
+                            <div class="ap-distribution">
+                                ${Object.entries(data.ap_analysis.ap_counts).map(([ap, count]) => 
+                                    `<div class="ap-item"><strong>${ap}:</strong> ${count} conexões</div>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Amostra dos dados
+                if (data.sample_data && data.sample_data.length > 0) {
+                    html += `
+                        <div class="analysis-section">
+                            <h5>📋 Amostra dos Dados (Primeiras 10 linhas)</h5>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            ${Object.keys(data.sample_data[0]).map(col => `<th>${col}</th>`).join('')}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${data.sample_data.map(row => 
+                                            `<tr>${Object.values(row).map(val => `<td>${val}</td>`).join('')}</tr>`
+                                        ).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                viewer.innerHTML = html;
+                
+            } catch (error) {
+                showAlert('error', 'Erro ao analisar CSV: ' + error.message);
+            }
+        }
+
+        // Visualizar dados CSV com paginação
+        async function viewCSVData(filename, page = 1) {
+            try {
+                const response = await fetch(`/api/view_csv_data/${filename}?page=${page}&per_page=20`);
+                const data = await response.json();
+                
+                const viewer = document.getElementById('dataViewer');
+                
+                let html = `
+                    <h4>📋 Dados CSV: ${filename}</h4>
+                    <div class="pagination-info">
+                        <span>Página ${data.pagination.current_page} de ${data.pagination.total_pages}</span>
+                        <span>(${data.pagination.start_row}-${data.pagination.end_row} de ${data.pagination.total_rows} linhas)</span>
+                    </div>
+                `;
+                
+                // Controles de paginação
+                html += `
+                    <div class="pagination-controls">
+                        ${data.pagination.current_page > 1 ? 
+                            `<button class="btn" onclick="viewCSVData('${filename}', ${data.pagination.current_page - 1})">⬅️ Anterior</button>` : 
+                            '<button class="btn" disabled>⬅️ Anterior</button>'
+                        }
+                        ${data.pagination.current_page < data.pagination.total_pages ? 
+                            `<button class="btn" onclick="viewCSVData('${filename}', ${data.pagination.current_page + 1})">Próximo ➡️</button>` : 
+                            '<button class="btn" disabled>Próximo ➡️</button>'
+                        }
+                    </div>
+                `;
+                
+                // Tabela de dados
+                if (data.data && data.data.length > 0) {
+                    html += `
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        ${data.columns.map(col => `<th>${col}</th>`).join('')}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${data.data.map(row => 
+                                        `<tr>${data.columns.map(col => `<td>${row[col] || ''}</td>`).join('')}</tr>`
+                                    ).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                } else {
+                    html += '<p>Nenhum dado encontrado.</p>';
+                }
+                
+                viewer.innerHTML = html;
+                
+            } catch (error) {
+                showAlert('error', 'Erro ao visualizar dados CSV: ' + error.message);
             }
         }
 

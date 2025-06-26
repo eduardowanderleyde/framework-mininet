@@ -10,6 +10,8 @@ import os
 import json
 import time
 import threading
+import csv
+import pandas as pd
 from datetime import datetime
 
 app = Flask(__name__)
@@ -138,6 +140,150 @@ def list_graphs():
     png_files.sort(key=lambda x: os.path.getmtime(x), reverse=True)
     # Retornar caminhos relativos
     return jsonify({'graphs': png_files})
+
+@app.route('/api/analyze_csv/<filename>')
+def analyze_csv(filename):
+    """Analisa um arquivo CSV e retorna estatísticas detalhadas"""
+    if not os.path.exists(filename):
+        return jsonify({'error': 'Arquivo não encontrado'}), 404
+    
+    try:
+        # Ler o CSV
+        df = pd.read_csv(filename)
+        
+        # Estatísticas básicas
+        stats = {
+            'total_rows': len(df),
+            'columns': list(df.columns),
+            'file_size': os.path.getsize(filename),
+            'last_modified': datetime.fromtimestamp(os.path.getmtime(filename)).strftime('%Y-%m-%d %H:%M:%S')
+        }
+        
+        # Análise por coluna
+        column_analysis = {}
+        for col in df.columns:
+            if df[col].dtype in ['int64', 'float64']:
+                column_analysis[col] = {
+                    'type': 'numeric',
+                    'min': float(df[col].min()),
+                    'max': float(df[col].max()),
+                    'mean': float(df[col].mean()),
+                    'std': float(df[col].std())
+                }
+            else:
+                column_analysis[col] = {
+                    'type': 'categorical',
+                    'unique_values': int(df[col].nunique()),
+                    'most_common': df[col].value_counts().head(3).to_dict()
+                }
+        
+        stats['column_analysis'] = column_analysis
+        
+        # Análise específica para logs de rede
+        if 'rssi' in df.columns:
+            stats['rssi_analysis'] = {
+                'min_rssi': float(df['rssi'].min()),
+                'max_rssi': float(df['rssi'].max()),
+                'avg_rssi': float(df['rssi'].mean()),
+                'rssi_range': float(df['rssi'].max() - df['rssi'].min())
+            }
+        
+        if 'distance' in df.columns:
+            stats['distance_analysis'] = {
+                'min_distance': float(df['distance'].min()),
+                'max_distance': float(df['distance'].max()),
+                'avg_distance': float(df['distance'].mean()),
+                'total_distance_covered': float(df['distance'].sum())
+            }
+        
+        if 'ap' in df.columns:
+            stats['ap_analysis'] = {
+                'unique_aps': int(df['ap'].nunique()),
+                'ap_counts': df['ap'].value_counts().to_dict(),
+                'most_used_ap': df['ap'].mode().iloc[0] if not df['ap'].mode().empty else None
+            }
+        
+        # Amostra dos dados (primeiras 10 linhas)
+        stats['sample_data'] = df.head(10).to_dict('records')
+        
+        return jsonify(stats)
+        
+    except Exception as e:
+        return jsonify({'error': f'Erro ao analisar CSV: {str(e)}'}), 500
+
+@app.route('/api/view_csv_data/<filename>')
+def view_csv_data(filename):
+    """Visualiza dados CSV com paginação"""
+    if not os.path.exists(filename):
+        return jsonify({'error': 'Arquivo não encontrado'}), 404
+    
+    try:
+        page = int(request.args.get('page', 1))
+        per_page = int(request.args.get('per_page', 50))
+        
+        # Ler o CSV
+        df = pd.read_csv(filename)
+        
+        # Calcular paginação
+        total_rows = len(df)
+        total_pages = (total_rows + per_page - 1) // per_page
+        
+        # Obter dados da página
+        start_idx = (page - 1) * per_page
+        end_idx = start_idx + per_page
+        page_data = df.iloc[start_idx:end_idx]
+        
+        return jsonify({
+            'data': page_data.to_dict('records'),
+            'pagination': {
+                'current_page': page,
+                'total_pages': total_pages,
+                'per_page': per_page,
+                'total_rows': total_rows,
+                'start_row': start_idx + 1,
+                'end_row': min(end_idx, total_rows)
+            },
+            'columns': list(df.columns)
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Erro ao visualizar dados: {str(e)}'}), 500
+
+@app.route('/api/search_csv/<filename>')
+def search_csv(filename):
+    """Busca em dados CSV"""
+    if not os.path.exists(filename):
+        return jsonify({'error': 'Arquivo não encontrado'}), 404
+    
+    try:
+        query = request.args.get('q', '')
+        column = request.args.get('column', '')
+        
+        if not query:
+            return jsonify({'error': 'Query de busca é obrigatória'}), 400
+        
+        # Ler o CSV
+        df = pd.read_csv(filename)
+        
+        # Fazer busca
+        if column and column in df.columns:
+            # Busca em coluna específica
+            mask = df[column].astype(str).str.contains(query, case=False, na=False)
+        else:
+            # Busca em todas as colunas
+            mask = df.astype(str).apply(lambda x: x.str.contains(query, case=False, na=False)).any(axis=1)
+        
+        results = df[mask]
+        
+        return jsonify({
+            'results': results.to_dict('records'),
+            'total_found': len(results),
+            'query': query,
+            'column': column
+        })
+        
+    except Exception as e:
+        return jsonify({'error': f'Erro na busca: {str(e)}'}), 500
 
 def execute_scenario(scenario_id):
     """Executa um cenário em background"""
