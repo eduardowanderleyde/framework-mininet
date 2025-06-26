@@ -9,21 +9,21 @@ Cenário: Rasp-Car-Rout (Raspberry + Roteador móvel)
 """
 from mininet.node import Controller
 from mininet.log import setLogLevel, info
-from mininet.wifi.node import OVSKernelAP
-from mininet.wifi.link import wmediumd
-from mininet.wifi.cli import CLI_wifi
-from mininet.wifi.net import Mininet_wifi
+from mn_wifi.node import OVSKernelAP
+from mn_wifi.link import wmediumd
+from mn_wifi.cli import CLI
+from mn_wifi.net import Mininet_wifi
 import time
 import threading
 import csv
 
 def topology():
-    net = Mininet_wifi(controller=Controller, link=wmediumd, accessPoint=OVSKernelAP, enable_interference=True)
+    net = Mininet_wifi(controller=Controller, link=wmediumd, accessPoint=OVSKernelAP)
     info("*** Criando nós\n")
     c0 = net.addController('c0', controller=Controller)
-    modem = net.addAccessPoint('modem', ssid='Internet', mode='g', channel='1', position='10,30,0', range=25)
-    mesh1 = net.addAccessPoint('mesh1', ssid='MeshNet', mode='g', channel='6', position='40,30,0', range=25)
-    mesh2 = net.addAccessPoint('mesh2', ssid='MeshNet', mode='g', channel='11', position='70,30,0', range=25)
+    modem = net.addAccessPoint('modem', ssid='Internet', mode='g', channel='1', position='10,30,0', range=25, dpid='1')
+    mesh1 = net.addAccessPoint('mesh1', ssid='MeshNet', mode='g', channel='6', position='40,30,0', range=25, dpid='2')
+    mesh2 = net.addAccessPoint('mesh2', ssid='MeshNet', mode='g', channel='11', position='70,30,0', range=25, dpid='3')
     rasp = net.addStation('rasp', ip='10.0.0.10/24', position='15,25,0')
     net.setPropagationModel(model="logDistance", exp=3.5)
     net.configureWifiNodes()
@@ -38,33 +38,53 @@ def topology():
             fieldnames = ['timestamp', 'position', 'ap', 'rssi']
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
-            while True:
-                pos = rasp.params['position']
+            for i in range(10):  # Executar apenas 10 vezes para teste
+                # Obter posição de forma mais segura
+                try:
+                    pos = f"{rasp.params.get('x', 0)},{rasp.params.get('y', 0)},{rasp.params.get('z', 0)}"
+                except:
+                    pos = "0,0,0"
+                
                 best_ap = None
                 best_rssi = -999
                 for ap in [modem, mesh1, mesh2]:
-                    rssi = -50 - (rasp.getDistanceTo(ap) * 2)
-                    if rssi > best_rssi:
-                        best_rssi = rssi
-                        best_ap = ap.name
-                writer.writerow({'timestamp': time.time(), 'position': pos, 'ap': best_ap, 'rssi': best_rssi})
-                csvfile.flush()
+                    try:
+                        rssi = -50 - (rasp.getDistanceTo(ap) * 2)
+                        if rssi > best_rssi:
+                            best_rssi = rssi
+                            best_ap = ap.name
+                    except:
+                        continue
+                
+                if best_ap:
+                    writer.writerow({'timestamp': time.time(), 'position': pos, 'ap': best_ap, 'rssi': best_rssi})
+                    csvfile.flush()
+                    info(f"Log: {pos} -> {best_ap} (RSSI: {best_rssi:.1f})\n")
                 time.sleep(2)
 
     def move_rasp_and_mesh2():
         positions = [(15,25,0), (35,30,0), (55,30,0), (75,30,0), (35,30,0), (15,25,0)]
-        while True:
-            for pos in positions:
-                rasp.setPosition(f'{pos[0]},{pos[1]},{pos[2]}')
-                mesh2.setPosition(f'{pos[0]},{pos[1]},{pos[2]}')
-                time.sleep(5)
+        for i in range(10):  # Executar apenas 10 vezes para teste
+            pos = positions[i % len(positions)]
+            rasp.setPosition(f'{pos[0]},{pos[1]},{pos[2]}')
+            mesh2.setPosition(f'{pos[0]},{pos[1]},{pos[2]}')
+            info(f"Raspberry e Mesh2 movidos para: {pos}\n")
+            time.sleep(3)
 
-    threading.Thread(target=scan_and_log, daemon=True).start()
-    threading.Thread(target=move_rasp_and_mesh2, daemon=True).start()
-    time.sleep(5)
+    info("*** Iniciando threads de mobilidade e escaneamento\n")
+    scan_thread = threading.Thread(target=scan_and_log, daemon=True)
+    move_thread = threading.Thread(target=move_rasp_and_mesh2, daemon=True)
+    
+    scan_thread.start()
+    move_thread.start()
+    
+    # Aguardar um pouco para ver os logs
+    time.sleep(15)
+    
+    info("*** Testando conectividade\n")
     net.pingAll()
-    info("*** Iniciando CLI\n")
-    CLI_wifi(net)
+    
+    info("*** Parando rede\n")
     net.stop()
 
 if __name__ == '__main__':

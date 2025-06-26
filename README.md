@@ -155,3 +155,5 @@ Para contribuir com o projeto:
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes. 
+
+sudo bash scripts/install_mininet_wifi.sh 
